@@ -1,25 +1,19 @@
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
-
 #install.packages("pheatmap")
 
 
-library(pheatmap)        #ÒıÓÃ°ü
-expFile="uniSigGeneExp.txt"        #±í´ïÊı¾İÎÄ¼ş
-geneCluFile="geneCluster.txt"      #»ùÒò·ÖĞÍ½á¹ûÎÄ¼ş
-m6aCluFile="m6aCluster.txt"        #m6A·ÖĞÍ½á¹ûÎÄ¼ş
-cliFile="clinical.txt"             #ÁÙ´²Êı¾İÎÄ¼ş
-setwd("D:\\biowolf\\m6aTME\\35.geneHeatmap")     #ÉèÖÃ¹¤×÷Ä¿Â¼
+library(pheatmap)        #å¼•ç”¨åŒ…
+expFile="uniSigGeneExp.txt"        #è¡¨è¾¾æ•°æ®æ–‡ä»¶
+geneCluFile="geneCluster.txt"      #åŸºå› åˆ†å‹ç»“æœæ–‡ä»¶
+m6aCluFile="m6aCluster.txt"        #m6Aåˆ†å‹ç»“æœæ–‡ä»¶
+cliFile="clinical.txt"             #ä¸´åºŠæ•°æ®æ–‡ä»¶
+setwd("D:\\biowolf\\m6aTME\\35.geneHeatmap")     #è®¾ç½®å·¥ä½œç›®å½•
 
-#¶ÁÈ¡ÊäÈëÎÄ¼ş
+#è¯»å–è¾“å…¥æ–‡ä»¶
 exp=read.table(expFile, header=T, sep="\t", check.names=F, row.names=1)
 m6aClu=read.table(m6aCluFile, header=T, sep="\t", check.names=F, row.names=1)
 geneClu=read.table(geneCluFile, header=T, sep="\t", check.names=F, row.names=1)
 
-#ºÏ²¢Êı¾İ
+#åˆå¹¶æ•°æ®
 exp=as.data.frame(t(exp))
 sameSample=intersect(row.names(exp), row.names(m6aClu))
 exp=exp[sameSample,,drop=F]
@@ -28,19 +22,19 @@ Project=gsub("(.*?)\\_.*", "\\1", rownames(expData))
 rownames(expData)=gsub("(.*?)\\_(.*?)", "\\2", rownames(expData))
 expData=cbind(expData, Project)
 
-#ºÏ²¢ÁÙ´²Êı¾İ
+#åˆå¹¶ä¸´åºŠæ•°æ®
 cli=read.table(cliFile, header=T, sep="\t", check.names=F, row.names=1)
 sameSample=intersect(row.names(expData), row.names(cli))
 expData=expData[sameSample,,drop=F]
 cli=cli[sameSample,,drop=F]
 data=cbind(expData, cli)
 
-#ÌáÈ¡ÈÈÍ¼Êı¾İ
+#æå–çƒ­å›¾æ•°æ®
 data=data[order(data$geneCluster),]
 Type=data[,((ncol(data)-2-ncol(cli)):ncol(data))]
 data=t(data[,1:(ncol(expData)-3)])
 
-#¾ÛÀàÑÕÉ«
+#èšç±»é¢œè‰²
 bioCol=c("#0066FF","#FF9900","#FF0000","#6E568C","#7CC767","#223D6C","#D20A13","#FFD121","#088247","#11AA4D")
 ann_colors=list()
 m6Acol=bioCol[1:length(levels(factor(Type$m6Acluster)))]
@@ -50,7 +44,7 @@ GENEcol=bioCol[1:length(levels(factor(Type$geneCluster)))]
 names(GENEcol)=levels(factor(Type$geneCluster))
 ann_colors[["geneCluster"]]=GENEcol
 
-#ÈÈÍ¼¿ÉÊÓ»¯
+#çƒ­å›¾å¯è§†åŒ–
 pdf("heatmap.pdf", height=6, width=8)
 pheatmap(data,
          annotation=Type,
@@ -66,9 +60,3 @@ pheatmap(data,
          fontsize_col=6)
 dev.off()
 
-
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
