@@ -1,9 +1,3 @@
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
-
 #if (!requireNamespace("BiocManager", quietly = TRUE))
 #    install.packages("BiocManager")
 #BiocManager::install("limma")
@@ -12,15 +6,15 @@
 #install.packages("ggpubr")
 
 
-#ÒıÓÃ°ü
+#å¼•ç”¨åŒ…
 library(limma)
 library(reshape2)
 library(ggpubr)
-expFile="m6aGeneExp.txt"          #±í´ïÊäÈëÎÄ¼ş
-geneCluFile="geneCluster.txt"     #»ùÒò·ÖĞÍÎÄ¼ş
-setwd("D:\\biowolf\\m6aTME\\36.m6AClusterDiff")       #ÉèÖÃ¹¤×÷Ä¿Â¼
+expFile="m6aGeneExp.txt"          #è¡¨è¾¾è¾“å…¥æ–‡ä»¶
+geneCluFile="geneCluster.txt"     #åŸºå› åˆ†å‹æ–‡ä»¶
+setwd("D:\\biowolf\\m6aTME\\36.m6AClusterDiff")       #è®¾ç½®å·¥ä½œç›®å½•
 
-#¶ÁÈ¡±í´ïÊäÈëÎÄ¼ş
+#è¯»å–è¡¨è¾¾è¾“å…¥æ–‡ä»¶
 rt=read.table(expFile, header=T, sep="\t", check.names=F)
 rt=as.matrix(rt)
 rownames(rt)=rt[,1]
@@ -30,22 +24,22 @@ data=matrix(as.numeric(as.matrix(exp)),nrow=nrow(exp),dimnames=dimnames)
 data=avereps(data)
 data=t(data)
 
-#¶ÁÈ¡»ùÒò·ÖĞÍÎÄ¼ş
+#è¯»å–åŸºå› åˆ†å‹æ–‡ä»¶
 geneClu=read.table(geneCluFile, header=T, sep="\t", check.names=F, row.names=1)
 
-#ºÏ²¢Êı¾İ
+#åˆå¹¶æ•°æ®
 sameSample=intersect(row.names(data), row.names(geneClu))
 expClu=cbind(data[sameSample,,drop=F], geneClu[sameSample,,drop=F])
 
-#°ÑÊı¾İ×ª»»³Éggplot2ÊäÈëÎÄ¼ş
+#æŠŠæ•°æ®è½¬æ¢æˆggplot2è¾“å…¥æ–‡ä»¶
 data=melt(expClu, id.vars=c("geneCluster"))
 colnames(data)=c("geneCluster", "Gene", "Expression")
 
-#ÉèÖÃÑÕÉ«
+#è®¾ç½®é¢œè‰²
 bioCol=c("#0066FF","#FF9900","#FF0000","#6E568C","#7CC767","#223D6C","#D20A13","#FFD121","#088247","#11AA4D")
 bioCol=bioCol[1:length(levels(factor(data[,"geneCluster"])))]
 
-#»æÖÆÏäÏßÍ¼
+#ç»˜åˆ¶ç®±çº¿å›¾
 p=ggboxplot(data, x="Gene", y="Expression", color = "geneCluster", 
 	     ylab="Gene expression",
 	     xlab="",
@@ -57,14 +51,8 @@ p1=p+stat_compare_means(aes(group=geneCluster),
 	      symnum.args=list(cutpoints = c(0, 0.001, 0.01, 0.05, 1), symbols = c("***", "**", "*", " ")),
 	      label = "p.signif")
 
-#Êä³öÏäÏßÍ¼
+#è¾“å‡ºç®±çº¿å›¾
 pdf(file="boxplot.pdf", width=7, height=5)
 print(p1)
 dev.off()
 
-
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
