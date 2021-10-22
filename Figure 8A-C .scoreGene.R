@@ -1,8 +1,3 @@
-######Video source: https://ke.biowolf.cn
-######ÉúÐÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ÐÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ðÒÉÎ¢ÐÅ: 18520221056
 
 #install.packages("ggpubr")
 
@@ -11,16 +6,16 @@
 #BiocManager::install("limma")
 
 
-#ÒýÓÃ°ü
+#å¼•ç”¨åŒ…
 library(limma)
 library(ggpubr)
-gene="CD274"            #»ùÒòµÄ±ê×¼Ãû×Ö
-showName="PD-L1"        #Í¼ÐÎÀïÃæÏÔÊ¾µÄ»ùÒòÃû³Æ
-expFile="merge.txt"                #±í´ïÊý¾ÝÎÄ¼þ
-scoreFile="m6Ascore.group.txt"     #m6A´ò·Ö·Ö×éÎÄ¼þ
-setwd("D:\\biowolf\\m6aTME\\48.scoreGene")      #ÉèÖÃ¹¤×÷Ä¿Â¼
+gene="CD274"            #åŸºå› çš„æ ‡å‡†åå­—
+showName="PD-L1"        #å›¾å½¢é‡Œé¢æ˜¾ç¤ºçš„åŸºå› åç§°
+expFile="merge.txt"                #è¡¨è¾¾æ•°æ®æ–‡ä»¶
+scoreFile="m6Ascore.group.txt"     #m6Aæ‰“åˆ†åˆ†ç»„æ–‡ä»¶
+setwd("D:\\biowolf\\m6aTME\\48.scoreGene")      #è®¾ç½®å·¥ä½œç›®å½•
 
-#¶ÁÈ¡±í´ïÊý¾ÝÎÄ¼þ
+#è¯»å–è¡¨è¾¾æ•°æ®æ–‡ä»¶
 rt=read.table(expFile, header=T, sep="\t", check.names=F)
 rt=as.matrix(rt)
 rownames(rt)=rt[,1]
@@ -30,29 +25,29 @@ data=matrix(as.numeric(as.matrix(exp)),nrow=nrow(exp),dimnames=dimnames)
 data=avereps(data)
 colnames(data)=gsub("(.*?)\\_(.*?)", "\\2", colnames(data))
 
-#ÌáÈ¡Ä¿±ê»ùÒò±í´ïÁ¿
+#æå–ç›®æ ‡åŸºå› è¡¨è¾¾é‡
 data=rbind(data, gene=data[gene,])
 exp=t(data[c("gene",gene),])
 exp=avereps(exp)
 
-#¶ÁÈ¡m6A´ò·Ö·Ö×éÎÄ¼þ
+#è¯»å–m6Aæ‰“åˆ†åˆ†ç»„æ–‡ä»¶
 score=read.table(scoreFile, header=T, sep="\t", check.names=F, row.names=1)
 	
-#ºÏ²¢Êý¾Ý
+#åˆå¹¶æ•°æ®
 sameSample=intersect(row.names(exp), row.names(score))
 exp=exp[sameSample,]
 exp[exp>quantile(exp,0.975)]=quantile(exp,0.975)
 score=score[sameSample,]
 data=cbind(as.data.frame(exp), as.data.frame(score))
 	
-#ÉèÖÃ±È½Ï×é
+#è®¾ç½®æ¯”è¾ƒç»„
 data$group=factor(data$group, levels=c("Low", "High"))
 group=levels(factor(data$group))
 comp=combn(group,2)
 my_comparisons=list()
 for(i in 1:ncol(comp)){my_comparisons[[i]]<-comp[,i]}
 	
-#»æÖÆboxplot
+#ç»˜åˆ¶boxplot
 boxplot=ggboxplot(data, x="group", y="gene", fill="group",
 			      xlab="m6Ascore",
 			      ylab=paste(showName, "expression"),
@@ -60,14 +55,7 @@ boxplot=ggboxplot(data, x="group", y="gene", fill="group",
 			      palette=c("#0066FF","#FF0000"))+ 
 	stat_compare_means(comparisons = my_comparisons)
 	
-#Êä³öÍ¼Æ¬
+#è¾“å‡ºå›¾ç‰‡
 pdf(file=paste0(gene, ".pdf"), width=5, height=4.5)
 print(boxplot)
 dev.off()
-
-
-######Video source: https://ke.biowolf.cn
-######ÉúÐÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ÐÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ðÒÉÎ¢ÐÅ: 18520221056
