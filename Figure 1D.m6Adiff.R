@@ -1,8 +1,4 @@
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
+
 
 #if (!requireNamespace("BiocManager", quietly = TRUE))
 #    install.packages("BiocManager")
@@ -12,15 +8,15 @@
 #install.packages("ggpubr")
 
 
-#ÒıÓÃ°ü
+#å¼•ç”¨åŒ…
 library(limma)
 library(reshape2)
 library(ggpubr)
-expFile="TCGA.TPM.txt"      #»ùÒò±í´ï¾ØÕó
-geneFile="gene.txt"         #m6A»ùÒòÁĞ±í
-setwd("D:\\biowolf\\m6aTME\\15.m6Adiff")       #ÉèÖÃ¹¤×÷Ä¿Â¼
+expFile="TCGA.TPM.txt"      #åŸºå› è¡¨è¾¾çŸ©é˜µ
+geneFile="gene.txt"         #m6AåŸºå› åˆ—è¡¨
+setwd("D:\\biowolf\\m6aTME\\15.m6Adiff")       #è®¾ç½®å·¥ä½œç›®å½•
 
-#¶ÁÈ¡ÊäÈëÎÄ¼ş
+#è¯»å–è¾“å…¥æ–‡ä»¶
 rt=read.table(expFile, header=T, sep="\t", check.names=F)
 rt=as.matrix(rt)
 rownames(rt)=rt[,1]
@@ -29,20 +25,20 @@ dimnames=list(rownames(exp), colnames(exp))
 data=matrix(as.numeric(as.matrix(exp)), nrow=nrow(exp), dimnames=dimnames)
 data=avereps(data)
 
-#ÌáÈ¡m6A»ùÒò±í´ïÁ¿
+#æå–m6AåŸºå› è¡¨è¾¾é‡
 gene=read.table(geneFile, header=T, sep="\t", check.names=F)
 sameGene=intersect(as.vector(gene[,1]), row.names(data))
 data=data[sameGene,]
 
-#Õı³£ºÍÖ×ÁöÊıÄ¿
+#æ­£å¸¸å’Œè‚¿ç˜¤æ•°ç›®
 group=sapply(strsplit(colnames(data),"\\-"), "[", 4)
 group=sapply(strsplit(group,""), "[", 1)
 group=gsub("2", "1", group)
-conNum=length(group[group==1])       #Õı³£×éÑùÆ·ÊıÄ¿
-treatNum=length(group[group==0])     #Ö×Áö×éÑùÆ·ÊıÄ¿
+conNum=length(group[group==1])       #æ­£å¸¸ç»„æ ·å“æ•°ç›®
+treatNum=length(group[group==0])     #è‚¿ç˜¤ç»„æ ·å“æ•°ç›®
 sampleType=c(rep(1,conNum), rep(2,treatNum))
 
-#°ÑÊı¾İ×ª»»³Éggplot2ÊäÈëÎÄ¼ş
+#æŠŠæ•°æ®è½¬æ¢æˆggplot2è¾“å…¥æ–‡ä»¶
 exp=log2(data+1)
 exp=as.data.frame(t(exp))
 exp=cbind(exp, Type=sampleType)
@@ -50,7 +46,7 @@ exp$Type=ifelse(exp$Type==1, "Normal", "Tumor")
 data=melt(exp, id.vars=c("Type"))
 colnames(data)=c("Type", "Gene", "Expression")
 
-#»æÖÆÏäÏßÍ¼
+#ç»˜åˆ¶ç®±çº¿å›¾
 p=ggboxplot(data, x="Gene", y="Expression", color = "Type", 
 	     ylab="Gene expression",
 	     xlab="",
@@ -63,14 +59,9 @@ p1=p+stat_compare_means(aes(group=Type),
 	      symnum.args=list(cutpoints = c(0, 0.001, 0.01, 0.05, 1), symbols = c("***", "**", "*", " ")),
 	      label = "p.signif")
 
-#Êä³öÏäÏßÍ¼
+#è¾“å‡ºç®±çº¿å›¾
 pdf(file="boxplot.pdf", width=7, height=5)
 print(p1)
 dev.off()
 
 
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
