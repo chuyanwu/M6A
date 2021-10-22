@@ -1,8 +1,3 @@
-######Video source: https://ke.biowolf.cn
-######生信自学网: https://www.biowolf.cn/
-######微信公众号：biowolf_cn
-######合作邮箱：biowolf@foxmail.com
-######答疑微信: 18520221056
 
 #install.packages("ggpubr")
 
@@ -66,10 +61,3 @@ p1=ggplot(data, aes(m6Ascore, TMB)) +
 pdf(file="cor.pdf", width=6, height=4.5)
 print(p1)
 dev.off()
-
-
-######Video source: https://ke.biowolf.cn
-######生信自学网: https://www.biowolf.cn/
-######微信公众号：biowolf_cn
-######合作邮箱：biowolf@foxmail.com
-######答疑微信: 18520221056
