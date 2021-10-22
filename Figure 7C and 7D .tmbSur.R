@@ -1,38 +1,33 @@
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
 
 #install.packages("survival")
 #install.packages("survminer")
 
 
-#ÒıÓÃ°ü
+#å¼•ç”¨åŒ…
 library(survival)
 library(survminer)
-tmbFile="TMB.txt"                  #Ö×ÁöÍ»±ä¸ººÉÎÄ¼ş
-scoreFile="m6Ascore.group.txt"     #m6A´ò·ÖµÄ·Ö×éÎÄ¼ş
-setwd("D:\\biowolf\\m6aTME\\43.tmbSur")       #ĞŞ¸Ä¹¤×÷Ä¿Â¼
+tmbFile="TMB.txt"                  #è‚¿ç˜¤çªå˜è´Ÿè·æ–‡ä»¶
+scoreFile="m6Ascore.group.txt"     #m6Aæ‰“åˆ†çš„åˆ†ç»„æ–‡ä»¶
+setwd("D:\\biowolf\\m6aTME\\43.tmbSur")       #ä¿®æ”¹å·¥ä½œç›®å½•
 
-#¶ÁÈ¡ÊäÈëÎÄ¼ş
-score=read.table(scoreFile, header=T, sep="\t", check.names=F, row.names=1)    #¶ÁÈ¡m6A´ò·ÖµÄ·Ö×éÎÄ¼ş
-tmb=read.table(tmbFile, header=T, sep="\t", check.names=F, row.names=1)        #¶ÁÈ¡TMBÊı¾İÎÄ¼ş
+#è¯»å–è¾“å…¥æ–‡ä»¶
+score=read.table(scoreFile, header=T, sep="\t", check.names=F, row.names=1)    #è¯»å–m6Aæ‰“åˆ†çš„åˆ†ç»„æ–‡ä»¶
+tmb=read.table(tmbFile, header=T, sep="\t", check.names=F, row.names=1)        #è¯»å–TMBæ•°æ®æ–‡ä»¶
 
-#ºÏ²¢Êı¾İ
+#åˆå¹¶æ•°æ®
 sameSample=intersect(row.names(tmb), row.names(score))
 tmb=tmb[sameSample,,drop=F]
 score=score[sameSample,,drop=F]
 data=cbind(score, tmb)
 
-#»ñÈ¡×îÓÅcutoff
+#è·å–æœ€ä¼˜cutoff
 res.cut=surv_cutpoint(data, time = "futime", event = "fustat", variables =c("TMB"))
 cutoff=as.numeric(res.cut$cutpoint[1])
 tmbType=ifelse(data[,"TMB"]<=cutoff, "L-TMB", "H-TMB")
 scoreType=ifelse(data$group=="Low", "L-m6Ascore", "H-m6Ascore")
 mergeType=paste0(tmbType, "+", scoreType)
 
-#Éú´æÇúÏßº¯Êı
+#ç”Ÿå­˜æ›²çº¿å‡½æ•°
 bioSurvival=function(surData=null, outFile=null){
 	diff=survdiff(Surv(futime, fustat) ~ group, data=surData)
 	length=length(levels(factor(surData[,"group"])))
@@ -45,7 +40,7 @@ bioSurvival=function(surData=null, outFile=null){
 	fit <- survfit(Surv(futime, fustat) ~ group, data = surData)
 	#print(surv_median(fit))
 	
-	#»æÖÆÉú´æÇúÏß
+	#ç»˜åˆ¶ç”Ÿå­˜æ›²çº¿
 	width=6.5
 	height=5.5
 	if(length(levels(factor(surData[,"group"])))>2){
@@ -70,23 +65,16 @@ bioSurvival=function(surData=null, outFile=null){
 			           risk.table=T,
 			           cumevents=F,
 			           risk.table.height=.25)
-	#Êä³öÍ¼ĞÎ
+	#è¾“å‡ºå›¾å½¢
 	pdf(file=outFile, onefile = FALSE, width=width, height=height)
 	print(surPlot)
 	dev.off()
 }
 
-#»æÖÆTMBµÄÉú´æÇúÏß
+#ç»˜åˆ¶TMBçš„ç”Ÿå­˜æ›²çº¿
 data$group=tmbType
 bioSurvival(surData=data, outFile="TMB.survival.pdf")
 
-#»æÖÆTMBÁªºÏm6A´ò·ÖµÄÉú´æÇúÏß
+#ç»˜åˆ¶TMBè”åˆm6Aæ‰“åˆ†çš„ç”Ÿå­˜æ›²çº¿
 data$group=mergeType
 bioSurvival(surData=data, outFile="TMB-score.survival.pdf")
-
-
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
