@@ -1,8 +1,3 @@
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
 
 #if (!requireNamespace("BiocManager", quietly = TRUE))
 #    install.packages("BiocManager")
@@ -13,17 +8,17 @@
 #install.packages("pheatmap")
 
 
-#ÒıÓÃ°ü
+#å¼•ç”¨åŒ…
 library(limma)
 library(GSEABase)
 library(GSVA)
 library(pheatmap)
-expFile="merge.txt"               #±í´ïÊäÈëÎÄ¼ş
-clusterFile="m6aCluster.txt"      #m6A·ÖĞÍÊäÈëÎÄ¼ş
-gmtFile="c2.cp.kegg.v7.2.symbols.gmt"                    #»ùÒò¼¯ÎÄ¼ş
-setwd("D:\\biowolf\\m6aTME\\26.GSVA")      #ÉèÖÃ¹¤×÷Ä¿Â¼
+expFile="merge.txt"               #è¡¨è¾¾è¾“å…¥æ–‡ä»¶
+clusterFile="m6aCluster.txt"      #m6Aåˆ†å‹è¾“å…¥æ–‡ä»¶
+gmtFile="c2.cp.kegg.v7.2.symbols.gmt"                    #åŸºå› é›†æ–‡ä»¶
+setwd("D:\\biowolf\\m6aTME\\26.GSVA")      #è®¾ç½®å·¥ä½œç›®å½•
 
-#¶ÁÈ¡±í´ïÊäÈëÎÄ¼ş,²¢¶ÔÊäÈëÎÄ¼şÕûÀí
+#è¯»å–è¡¨è¾¾è¾“å…¥æ–‡ä»¶,å¹¶å¯¹è¾“å…¥æ–‡ä»¶æ•´ç†
 rt=read.table(expFile, header=T, sep="\t", check.names=F)
 rt=as.matrix(rt)
 rownames(rt)=rt[,1]
@@ -32,7 +27,7 @@ dimnames=list(rownames(exp), colnames(exp))
 data=matrix(as.numeric(as.matrix(exp)), nrow=nrow(exp), dimnames=dimnames)
 data=avereps(data)
 
-#GSVA·ÖÎö
+#GSVAåˆ†æ
 geneSets=getGmt(gmtFile, geneIdType=SymbolIdentifier())
 gsvaResult=gsva(data, 
                 geneSets, 
@@ -43,10 +38,10 @@ gsvaResult=gsva(data,
 gsvaOut=rbind(id=colnames(gsvaResult), gsvaResult)
 write.table(gsvaOut, file="gsvaOut.txt", sep="\t", quote=F, col.names=F)
 
-#¶ÁÈ¡clusterÎÄ¼ş
+#è¯»å–clusteræ–‡ä»¶
 cluster=read.table(clusterFile, header=T, sep="\t", check.names=F, row.names=1)
 
-#Êı¾İºÏ²¢
+#æ•°æ®åˆå¹¶
 gsvaResult=t(gsvaResult)
 sameSample=intersect(row.names(gsvaResult), row.names(cluster))
 gsvaResult=gsvaResult[sameSample,,drop=F]
@@ -55,16 +50,16 @@ gsvaCluster=cbind(gsvaResult, cluster)
 Project=gsub("(.*?)\\_.*", "\\1", rownames(gsvaCluster))
 gsvaCluster=cbind(gsvaCluster, Project)
 
-#²îÒì·ÖÎö
+#å·®å¼‚åˆ†æ
 adj.P.Val.Filter=0.05
 allType=as.vector(gsvaCluster$m6Acluster)
 comp=combn(levels(factor(allType)), 2)
 for(i in 1:ncol(comp)){
-	#ÑùÆ··Ö×é
+	#æ ·å“åˆ†ç»„
 	treat=gsvaCluster[gsvaCluster$m6Acluster==comp[2,i],]
 	con=gsvaCluster[gsvaCluster$m6Acluster==comp[1,i],]
 	data=rbind(con, treat)
-	#²îÒì·ÖÎö
+	#å·®å¼‚åˆ†æ
 	Type=as.vector(data$m6Acluster)
 	ann=data[,c(ncol(data), (ncol(data)-1))]
 	data=t(data[,-c((ncol(data)-1), ncol(data))])
@@ -76,24 +71,24 @@ for(i in 1:ncol(comp)){
 	fit2=contrasts.fit(fit, cont.matrix)
 	fit2=eBayes(fit2)
 	
-	#Êä³öËùÓĞÍ¨Â·µÄ²îÒìÇé¿ö
+	#è¾“å‡ºæ‰€æœ‰é€šè·¯çš„å·®å¼‚æƒ…å†µ
 	allDiff=topTable(fit2,adjust='fdr',number=200000)
 	allDiffOut=rbind(id=colnames(allDiff),allDiff)
 	write.table(allDiffOut, file=paste0(contrast, ".all.txt"), sep="\t", quote=F, col.names=F)
 	
-	#Êä³öÏÔÖøµÄ²îÒì
+	#è¾“å‡ºæ˜¾è‘—çš„å·®å¼‚
 	diffSig=allDiff[with(allDiff, (abs(logFC)>0.1 & adj.P.Val < adj.P.Val.Filter )), ]
 	diffSigOut=rbind(id=colnames(diffSig),diffSig)
 	write.table(diffSigOut, file=paste0(contrast, ".diff.txt"), sep="\t", quote=F, col.names=F)
 	
-	#¾ÛÀàÑÕÉ«
+	#èšç±»é¢œè‰²
 	bioCol=c("#0066FF","#FF9900","#FF0000","#6E568C","#7CC767","#223D6C","#D20A13","#FFD121","#088247","#11AA4D")
 	ann_colors=list()
 	m6aCluCol=bioCol[1:length(levels(factor(allType)))]
 	names(m6aCluCol)=levels(factor(allType))
 	ann_colors[["m6Acluster"]]=m6aCluCol[c(comp[1,i], comp[2,i])]
 
-	#»æÖÆ²îÒìÍ¨Â·ÈÈÍ¼
+	#ç»˜åˆ¶å·®å¼‚é€šè·¯çƒ­å›¾
 	termNum=20
 	diffTermName=as.vector(rownames(diffSig))
 	diffLength=length(diffTermName)
@@ -115,9 +110,3 @@ for(i in 1:ncol(comp)){
 	dev.off()
 }
 
-
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
