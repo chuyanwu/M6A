@@ -1,8 +1,3 @@
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
 
 #if (!requireNamespace("BiocManager", quietly = TRUE))
 #    install.packages("BiocManager")
@@ -11,14 +6,14 @@
 #install.packages("ggplot2")
 
 
-#ÒıÓÃ°ü
+#å¼•ç”¨åŒ…
 library(limma)
 library(ggplot2)
-expFile="m6aGeneExp.txt"         #±í´ïÊäÈëÎÄ¼ş
-clusterFile="m6aCluster.txt"     #m6A·ÖĞÍÎÄ¼ş
-setwd("D:\\biowolf\\m6aTME\\28.PCA")      #ÉèÖÃ¹¤×÷Ä¿Â¼
+expFile="m6aGeneExp.txt"         #è¡¨è¾¾è¾“å…¥æ–‡ä»¶
+clusterFile="m6aCluster.txt"     #m6Aåˆ†å‹æ–‡ä»¶
+setwd("D:\\biowolf\\m6aTME\\28.PCA")      #è®¾ç½®å·¥ä½œç›®å½•
 
-#¶ÁÈ¡ÊäÈëÎÄ¼ş,²¢¶ÔÊäÈëÎÄ¼ş½øĞĞÕûÀí
+#è¯»å–è¾“å…¥æ–‡ä»¶,å¹¶å¯¹è¾“å…¥æ–‡ä»¶è¿›è¡Œæ•´ç†
 rt=read.table(expFile, header=T, sep="\t", check.names=F)
 rt=as.matrix(rt)
 rownames(rt)=rt[,1]
@@ -29,20 +24,20 @@ data=avereps(data)
 data=data[rowMeans(data)>0,]
 data=t(data)
 
-#PCA·ÖÎö
+#PCAåˆ†æ
 data.pca=prcomp(data, scale. = TRUE)
 pcaPredict=predict(data.pca)
 write.table(pcaPredict, file="newTab.xls", quote=F, sep="\t")
 
-#¶ÁÈ¡·ÖĞÍÎÄ¼ş
+#è¯»å–åˆ†å‹æ–‡ä»¶
 cluster=read.table(clusterFile, header=T, sep="\t", check.names=F, row.names=1)
 m6Acluster=as.vector(cluster[,1])
 
-#ÉèÖÃÑÕÉ«
+#è®¾ç½®é¢œè‰²
 bioCol=c("#0066FF","#FF9900","#FF0000","#6E568C","#7CC767","#223D6C","#D20A13","#FFD121","#088247","#11AA4D")
 m6aCluCol=bioCol[1:length(levels(factor(m6Acluster)))]
 
-#¿ÉÊÓ»¯
+#å¯è§†åŒ–
 PCA=data.frame(PC1=pcaPredict[,1], PC2=pcaPredict[,2], m6Acluster=m6Acluster)
 PCA.mean=aggregate(PCA[,1:2], list(m6Acluster=PCA$m6Acluster), mean)
 pdf(file="PCA.pdf", height=5, width=6.5)
@@ -54,9 +49,3 @@ ggplot(data = PCA, aes(PC1, PC2)) + geom_point(aes(color = m6Acluster)) +
     theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank())
 dev.off()
 
-
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
