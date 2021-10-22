@@ -1,8 +1,3 @@
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
 
 #if (!requireNamespace("BiocManager", quietly = TRUE))
 #    install.packages("BiocManager")
@@ -13,18 +8,18 @@
 #install.packages("ggpubr")
 
 
-#ÒıÓÃ°ü
+#å¼•ç”¨åŒ…
 library(reshape2)
 library(ggpubr)
 library(limma)
 library(GSEABase)
 library(GSVA)
-expFile="merge.txt"           #±í´ïÊäÈëÎÄ¼ş
-gmtFile="immune.gmt"          #ÃâÒßÊı¾İ¼¯ÎÄ¼ş
-clusterFile="m6aCluster.txt"       #m6A·ÖĞÍÊäÈëÎÄ¼ş
-setwd("D:\\biowolf\\m6aTME\\27.ssGSEA")     #ÉèÖÃ¹¤×÷Ä¿Â¼
+expFile="merge.txt"           #è¡¨è¾¾è¾“å…¥æ–‡ä»¶
+gmtFile="immune.gmt"          #å…ç–«æ•°æ®é›†æ–‡ä»¶
+clusterFile="m6aCluster.txt"       #m6Aåˆ†å‹è¾“å…¥æ–‡ä»¶
+setwd("D:\\biowolf\\m6aTME\\27.ssGSEA")     #è®¾ç½®å·¥ä½œç›®å½•
 
-#¶ÁÈ¡±í´ïÊäÈëÎÄ¼ş,²¢¶ÔÊäÈëÎÄ¼şÕûÀí
+#è¯»å–è¡¨è¾¾è¾“å…¥æ–‡ä»¶,å¹¶å¯¹è¾“å…¥æ–‡ä»¶æ•´ç†
 rt=read.table(expFile, header=T, sep="\t", check.names=F)
 rt=as.matrix(rt)
 rownames(rt)=rt[,1]
@@ -33,34 +28,34 @@ dimnames=list(rownames(exp),colnames(exp))
 data=matrix(as.numeric(as.matrix(exp)),nrow=nrow(exp),dimnames=dimnames)
 data=avereps(data)
 
-#¶ÁÈ¡»ùÒò¼¯ÎÄ¼ş
+#è¯»å–åŸºå› é›†æ–‡ä»¶
 geneSets=getGmt(gmtFile, geneIdType=SymbolIdentifier())
 
-#ssGSEA·ÖÎö
+#ssGSEAåˆ†æ
 ssgseaScore=gsva(data, geneSets, method='ssgsea', kcdf='Gaussian', abs.ranking=TRUE)
-#¶ÔssGSEA´ò·Ö½øĞĞ½ÃÕı
+#å¯¹ssGSEAæ‰“åˆ†è¿›è¡ŒçŸ«æ­£
 normalize=function(x){
   return((x-min(x))/(max(x)-min(x)))}
 ssgseaScore=normalize(ssgseaScore)
-#Êä³össGSEA´ò·Ö½á¹û
+#è¾“å‡ºssGSEAæ‰“åˆ†ç»“æœ
 ssgseaOut=rbind(id=colnames(ssgseaScore), ssgseaScore)
 write.table(ssgseaOut,file="ssGSEA.result.txt",sep="\t",quote=F,col.names=F)
 
-#¶ÁÈ¡·ÖĞÍÎÄ¼ş
+#è¯»å–åˆ†å‹æ–‡ä»¶
 cluster=read.table(clusterFile, header=T, sep="\t", check.names=F, row.names=1)
 
-#Êı¾İºÏ²¢
+#æ•°æ®åˆå¹¶
 ssgseaScore=t(ssgseaScore)
 sameSample=intersect(row.names(ssgseaScore), row.names(cluster))
 ssgseaScore=ssgseaScore[sameSample,,drop=F]
 cluster=cluster[sameSample,,drop=F]
 scoreCluster=cbind(ssgseaScore, cluster)
 
-#°ÑÊı¾İ×ª»»³Éggplot2ÊäÈëÎÄ¼ş
+#æŠŠæ•°æ®è½¬æ¢æˆggplot2è¾“å…¥æ–‡ä»¶
 data=melt(scoreCluster, id.vars=c("m6Acluster"))
 colnames(data)=c("m6Acluster", "Immune", "Fraction")
 
-#»æÖÆÏäÏßÍ¼
+#ç»˜åˆ¶ç®±çº¿å›¾
 bioCol=c("#0066FF","#FF9900","#FF0000","#6E568C","#7CC767","#223D6C","#D20A13","#FFD121","#088247","#11AA4D")
 bioCol=bioCol[1:length(levels(factor(data[,"m6Acluster"])))]
 p=ggboxplot(data, x="Immune", y="Fraction", color="m6Acluster", 
@@ -69,13 +64,6 @@ p=ggboxplot(data, x="Immune", y="Fraction", color="m6Acluster",
      legend.title="m6Acluster",
      palette=bioCol)
 p=p+rotate_x_text(50)
-pdf(file="boxplot.pdf", width=8, height=6.5)                          #Êä³öÍ¼Æ¬ÎÄ¼ş
+pdf(file="boxplot.pdf", width=8, height=6.5)                          #è¾“å‡ºå›¾ç‰‡æ–‡ä»¶
 p+stat_compare_means(aes(group=m6Acluster),symnum.args=list(cutpoints = c(0, 0.001, 0.01, 0.05, 1), symbols = c("***", "**", "*", "ns")),label = "p.signif")
 dev.off()
-
-
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
