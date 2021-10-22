@@ -1,37 +1,32 @@
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
 
 #install.packages("ggpubr")
 
 
-library(ggpubr)                    #ÒıÓÃ°ü
-tciaFile="TCIA.txt"                #ÃâÒßÖÎÁÆ´ò·ÖÎÄ¼ş
-scoreFile="m6Ascore.group.txt"     #m6A´ò·Ö·Ö×éÎÄ¼ş
-setwd("D:\\biowolf\\m6aTME\\49.IPS")     #ĞŞ¸Ä¹¤×÷Ä¿Â¼
+library(ggpubr)                    #å¼•ç”¨åŒ…
+tciaFile="TCIA.txt"                #å…ç–«æ²»ç–—æ‰“åˆ†æ–‡ä»¶
+scoreFile="m6Ascore.group.txt"     #m6Aæ‰“åˆ†åˆ†ç»„æ–‡ä»¶
+setwd("D:\\biowolf\\m6aTME\\49.IPS")     #ä¿®æ”¹å·¥ä½œç›®å½•
 
-#¶ÁÈ¡ÃâÒßÖÎÁÆ´ò·ÖÎÄ¼ş
+#è¯»å–å…ç–«æ²»ç–—æ‰“åˆ†æ–‡ä»¶
 ips=read.table(tciaFile, header=T, sep="\t", check.names=F, row.names=1)
 
-#¶ÁÈ¡m6A´ò·Ö·Ö×éÎÄ¼ş
+#è¯»å–m6Aæ‰“åˆ†åˆ†ç»„æ–‡ä»¶
 score=read.table(scoreFile, header=T, sep="\t", check.names=F, row.names=1)
 
-#ºÏ²¢Êı¾İ
+#åˆå¹¶æ•°æ®
 sameSample=intersect(row.names(ips), row.names(score))
 ips=ips[sameSample, , drop=F]
 score=score[sameSample, "group", drop=F]
 data=cbind(ips, score)
 
-#ÉèÖÃ±È½Ï×é
+#è®¾ç½®æ¯”è¾ƒç»„
 data$group=factor(data$group, levels=c("Low", "High"))
 group=levels(factor(data$group))
 comp=combn(group, 2)
 my_comparisons=list()
 for(i in 1:ncol(comp)){my_comparisons[[i]]<-comp[,i]}
 
-#¶ÔÃâÒßÖÎÁÆ´ò·Ö½øĞĞÑ­»·,·Ö±ğ»æÖÆĞ¡ÌáÇÙÍ¼
+#å¯¹å…ç–«æ²»ç–—æ‰“åˆ†è¿›è¡Œå¾ªç¯,åˆ†åˆ«ç»˜åˆ¶å°æç´å›¾
 for(i in colnames(data)[1:(ncol(data)-1)]){
 	rt=data[,c(i, "group")]
 	colnames(rt)=c("IPS", "group")
@@ -47,10 +42,3 @@ for(i in colnames(data)[1:(ncol(data)-1)]){
 	print(gg1)
 	dev.off()
 }
-
-
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
