@@ -1,32 +1,27 @@
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
 
 #install.packages("survival")
 #install.packages("survminer")
 
 
-#ÒıÓÃ°ü
+#å¼•ç”¨åŒ…
 library(survival)
 library(survminer)
-clusterFile="m6aCluster.txt"     #m6A·ÖĞÍÎÄ¼ş
-cliFile="time.txt"               #Éú´æÊı¾İÎÄ¼ş
-setwd("D:\\biowolf\\m6aTME\\24.m6aClusterSur")      #ÉèÖÃ¹¤×÷Ä¿Â¼
+clusterFile="m6aCluster.txt"     #m6Aåˆ†å‹æ–‡ä»¶
+cliFile="time.txt"               #ç”Ÿå­˜æ•°æ®æ–‡ä»¶
+setwd("D:\\biowolf\\m6aTME\\24.m6aClusterSur")      #è®¾ç½®å·¥ä½œç›®å½•
 
-#¶ÁÈ¡ÊäÈëÎÄ¼ş
+#è¯»å–è¾“å…¥æ–‡ä»¶
 cluster=read.table(clusterFile, header=T, sep="\t", check.names=F, row.names=1)
 rownames(cluster)=gsub("(.*?)\\_(.*?)", "\\2", rownames(cluster))
 cli=read.table(cliFile, header=T, sep="\t", check.names=F, row.names=1)
 colnames(cli)=c("futime", "fustat")
 cli$futime=cli$futime/365
 
-#Êı¾İºÏ²¢
+#æ•°æ®åˆå¹¶
 sameSample=intersect(row.names(cluster), row.names(cli))
 rt=cbind(cli[sameSample,,drop=F], cluster[sameSample,,drop=F])
 
-#Éú´æ²îÒìÍ³¼Æ
+#ç”Ÿå­˜å·®å¼‚ç»Ÿè®¡
 length=length(levels(factor(rt$m6Acluster)))
 diff=survdiff(Surv(futime, fustat) ~ m6Acluster, data = rt)
 pValue=1-pchisq(diff$chisq, df=length-1)
@@ -38,7 +33,7 @@ if(pValue<0.001){
 fit <- survfit(Surv(futime, fustat) ~ m6Acluster, data = rt)
 #print(surv_median(fit))
 
-#»æÖÆÉú´æÇúÏß
+#ç»˜åˆ¶ç”Ÿå­˜æ›²çº¿
 bioCol=c("#0066FF","#FF9900","#FF0000","#6E568C","#7CC767","#223D6C","#D20A13","#FFD121","#088247","#11AA4D")
 bioCol=bioCol[1:length]
 surPlot=ggsurvplot(fit, 
@@ -61,9 +56,3 @@ pdf(file="survival.pdf",onefile = FALSE,width=7,height=5.5)
 print(surPlot)
 dev.off()
 
-
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
