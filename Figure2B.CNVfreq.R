@@ -24,4 +24,3 @@ par(srt=45)
 text(bar, par('usr')[3]-0.2, rownames(data), adj=1)
 dev.off()
 
-
