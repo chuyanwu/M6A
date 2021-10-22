@@ -55,4 +55,3 @@ p1=p+stat_compare_means(aes(group=geneCluster),
 pdf(file="boxplot.pdf", width=7, height=5)
 print(p1)
 dev.off()
-
