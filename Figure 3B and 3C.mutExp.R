@@ -1,8 +1,4 @@
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
+
 
 #install.packages("ggpubr")
 
@@ -11,32 +7,32 @@
 #BiocManager::install("limma")
 
 
-#ÒıÓÃ°ü
+#å¼•ç”¨åŒ…
 library(limma)
 library(ggpubr)
-expFile="m6aGeneExp.txt"     #±í´ïÊı¾İÎÄ¼ş
-mutFile="mutMatrix.txt"      #Í»±äµÄ¾ØÕóÎÄ¼ş
-mutGene="ZC3H13"             #Ñ¡ÔñÍ»±ä·Ö×é»ùÒò
-setwd("D:\\biowolf\\m6aTME\\20.mutExp")      #ÉèÖÃ¹¤×÷Ä¿Â¼
+expFile="m6aGeneExp.txt"     #è¡¨è¾¾æ•°æ®æ–‡ä»¶
+mutFile="mutMatrix.txt"      #çªå˜çš„çŸ©é˜µæ–‡ä»¶
+mutGene="ZC3H13"             #é€‰æ‹©çªå˜åˆ†ç»„åŸºå› 
+setwd("D:\\biowolf\\m6aTME\\20.mutExp")      #è®¾ç½®å·¥ä½œç›®å½•
 
-#¶ÁÈ¡±í´ïÊı¾İÎÄ¼ş
+#è¯»å–è¡¨è¾¾æ•°æ®æ–‡ä»¶
 exp=read.table(expFile, header=T, sep="\t", check.names=F, row.names=1)
 colnames(exp)=gsub("(.*?)\\_(.*?)", "\\2", colnames(exp))
 exp=t(exp)
 
-#¶ÁÈ¡Í»±äÊı¾İÎÄ¼ş
+#è¯»å–çªå˜æ•°æ®æ–‡ä»¶
 mut=read.table(mutFile, header=T, sep="\t", check.names=F, row.names=1)
 mut=t(mut[mutGene,,drop=F])
 colnames(mut)=c("Type")
 
-#ºÏ²¢Êı¾İ
+#åˆå¹¶æ•°æ®
 sameSample=intersect(row.names(mut), row.names(exp))
 mut=mut[sameSample,,drop=F]
 exp=exp[sameSample,,drop=F]
 data=cbind(as.data.frame(exp), as.data.frame(mut))
 data$Type=paste0(mutGene, " " , data$Type)
 
-#ÉèÖÃ±È½Ï×é
+#è®¾ç½®æ¯”è¾ƒç»„
 data$Type=factor(data$Type, levels=c(paste0(mutGene, " Wild"), paste0(mutGene, " Mutation")) )
 group=levels(factor(data$Type))
 comp=combn(group,2)
@@ -46,22 +42,16 @@ for(i in 1:ncol(comp)){my_comparisons[[i]]<-comp[,i]}
 for(gene in colnames(data)[1:(ncol(data)-1)]){
 	data1=data[,c(gene, "Type")]
 	colnames(data1)=c("expression", "Type")
-	#»æÖÆÏäÏßÍ¼
+	#ç»˜åˆ¶ç®±çº¿å›¾
 	boxplot=ggboxplot(data1, x="Type", y="expression", fill="Type",
 				      xlab="",
 				      ylab=paste0(gene, " expression"),
 				      legend.title="",
 				      palette=c("#0066FF", "#FF0000") )+ 
 		stat_compare_means(comparisons = my_comparisons)
-	#Êä³öÍ¼Æ¬
+	#è¾“å‡ºå›¾ç‰‡
 	pdf(file=paste0(mutGene, "(mut)_", gene,".pdf"), width=5, height=4.5)
 	print(boxplot)
 	dev.off()
 }
 
-
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
