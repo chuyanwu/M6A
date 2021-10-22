@@ -1,8 +1,4 @@
-######Video source: https://ke.biowolf.cn
-######生信自学网: https://www.biowolf.cn/
-######微信公众号：biowolf_cn
-######合作邮箱：biowolf@foxmail.com
-######答疑微信: 18520221056
+
 
 #install.packages("RCircos")
 
@@ -47,8 +43,4 @@ RCircos.Gene.Name.Plot(RCircos.Gene.Label.Data, name.col, track.num, side)
 dev.off()
 
 
-######Video source: https://ke.biowolf.cn
-######生信自学网: https://www.biowolf.cn/
-######微信公众号：biowolf_cn
-######合作邮箱：biowolf@foxmail.com
-######答疑微信: 18520221056
+
