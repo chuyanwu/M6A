@@ -1,16 +1,16 @@
 ######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
+######ç”Ÿä¿¡è‡ªå­¦ç½‘: https://www.biowolf.cn/
+######å¾®ä¿¡å…¬ä¼—å·ï¼šbiowolf_cn
+######åˆä½œé‚®ç®±ï¼šbiowolf@foxmail.com
+######ç­”ç–‘å¾®ä¿¡: 18520221056
 
 #install.packages("RCircos")
 
 
-library("RCircos")       #ÒıÓÃ°ü
-setwd("D:\\biowolf\\m6aTME\\14.Rcircos")    #ÉèÖÃ¹¤×÷Ä¿Â¼
+library("RCircos")       #å¼•ç”¨åŒ…
+setwd("D:\\biowolf\\m6aTME\\14.Rcircos")    #è®¾ç½®å·¥ä½œç›®å½•
 
-#³õÊ¼»¯È¦Í¼
+#åˆå§‹åŒ–åœˆå›¾
 cytoBandIdeogram=read.table("refer.txt", header=T, sep="\t")
 chr.exclude <- NULL
 cyto.info <- cytoBandIdeogram
@@ -18,25 +18,25 @@ tracks.inside <- 5
 tracks.outside <- 0
 RCircos.Set.Core.Components(cyto.info, chr.exclude, tracks.inside, tracks.outside)
 
-#ÉèÖÃÈ¦Í¼²ÎÊı
+#è®¾ç½®åœˆå›¾å‚æ•°
 rcircos.params <- RCircos.Get.Plot.Parameters()
 rcircos.params$text.size=1
 rcircos.params$point.size=5
 RCircos.Reset.Plot.Parameters(rcircos.params)
 
-#Êä³öÎÄ¼ş
+#è¾“å‡ºæ–‡ä»¶
 pdf(file="RCircos.pdf", width=8, height=8)
 RCircos.Set.Plot.Area()
 RCircos.Chromosome.Ideogram.Plot()
 
-#É¢µãÍ¼
+#æ•£ç‚¹å›¾
 RCircos.Scatter.Data=read.table("Rcircos.scatter.txt", header=T, sep="\t", check.names=F)
 data.col <- 4
 track.num <- 1
 side <- "in"
 RCircos.Scatter.Plot(RCircos.Scatter.Data, data.col, track.num, side, by.fold=0.1)
 
-#¼ÓÉÏ»ùÒòÃû³Æ
+#åŠ ä¸ŠåŸºå› åç§°
 RCircos.Gene.Label.Data=read.table("Rcircos.geneLabel.txt", header=T, sep="\t", check.names=F)
 name.col <- 4
 side <- "in"
@@ -48,7 +48,7 @@ dev.off()
 
 
 ######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
+######ç”Ÿä¿¡è‡ªå­¦ç½‘: https://www.biowolf.cn/
+######å¾®ä¿¡å…¬ä¼—å·ï¼šbiowolf_cn
+######åˆä½œé‚®ç®±ï¼šbiowolf@foxmail.com
+######ç­”ç–‘å¾®ä¿¡: 18520221056
