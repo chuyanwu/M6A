@@ -1,20 +1,15 @@
-######Video source: https://ke.biowolf.cn
-######ÉúÐÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ÐÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ðÒÉÎ¢ÐÅ: 18520221056
 
-inputFile="cnvMatrix.txt"     #ÊäÈëÎÄ¼þ
-setwd("D:\\biowolf\\m6aTME\\12.CNVfreq")      #ÉèÖÃ¹¤×÷Ä¿Â¼
-rt=read.table(inputFile, header=T, sep="\t", check.names=F, row.names=1)    #¶ÁÈ¡ÊäÈëÎÄ¼þ
-GAIN=rowSums(rt> 0)       #¿½±´ÊýÔö¼ÓµÄÑùÆ·ÊýÄ¿
-LOSS=rowSums(rt< 0)       #¿½±´ÊýÈ±Ê§µÄÑùÆ·ÊýÄ¿
-GAIN=GAIN/ncol(rt)*100      #¿½±´ÊýÔö¼ÓµÄ°Ù·ÖÂÊ
-LOSS=LOSS/ncol(rt)*100      #¿½±´ÊýÈ±Ê§µÄ°Ù·ÖÂÊ
+inputFile="cnvMatrix.txt"     #è¾“å…¥æ–‡ä»¶
+setwd("D:\\biowolf\\m6aTME\\12.CNVfreq")      #è®¾ç½®å·¥ä½œç›®å½•
+rt=read.table(inputFile, header=T, sep="\t", check.names=F, row.names=1)    #è¯»å–è¾“å…¥æ–‡ä»¶
+GAIN=rowSums(rt> 0)       #æ‹·è´æ•°å¢žåŠ çš„æ ·å“æ•°ç›®
+LOSS=rowSums(rt< 0)       #æ‹·è´æ•°ç¼ºå¤±çš„æ ·å“æ•°ç›®
+GAIN=GAIN/ncol(rt)*100      #æ‹·è´æ•°å¢žåŠ çš„ç™¾åˆ†çŽ‡
+LOSS=LOSS/ncol(rt)*100      #æ‹·è´æ•°ç¼ºå¤±çš„ç™¾åˆ†çŽ‡
 data=cbind(GAIN, LOSS)
 data=data[order(data[,"GAIN"],decreasing = T),]
 
-#»æÖÆÍ¼ÐÎ
+#ç»˜åˆ¶å›¾å½¢
 data.max = apply(data, 1, max)
 pdf(file="CNVfreq.pdf", width=9, height=6)
 cex=1.3
@@ -30,8 +25,3 @@ text(bar, par('usr')[3]-0.2, rownames(data), adj=1)
 dev.off()
 
 
-######Video source: https://ke.biowolf.cn
-######ÉúÐÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ÐÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ðÒÉÎ¢ÐÅ: 18520221056
