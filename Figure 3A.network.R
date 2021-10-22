@@ -1,30 +1,25 @@
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
 
 #install.packages("igraph")
 #install.packages("psych")
 #install.packages("reshape2")
 #install.packages("RColorBrewer")
 
-#ÒıÓÃ°ü
+#å¼•ç”¨åŒ…
 library(igraph)
 library(psych)
 library(reshape2)
 library("RColorBrewer")
-GeneExpfile <- "m6aGeneExp.txt"     #±í´ïÊı¾İÎÄ¼ş
-Genefile <- "gene.txt"              #»ùÒòÁĞ±íÎÄ¼ş
-Coxfile <- "uniCox.txt"             #Ô¤ºó½á¹ûÎÄ¼ş
-setwd("D:\\biowolf\\m6aTME\\22.network")       #ÉèÖÃ¹¤×÷Ä¿Â¼
+GeneExpfile <- "m6aGeneExp.txt"     #è¡¨è¾¾æ•°æ®æ–‡ä»¶
+Genefile <- "gene.txt"              #åŸºå› åˆ—è¡¨æ–‡ä»¶
+Coxfile <- "uniCox.txt"             #é¢„åç»“æœæ–‡ä»¶
+setwd("D:\\biowolf\\m6aTME\\22.network")       #è®¾ç½®å·¥ä½œç›®å½•
 
-#¶ÁÈ¡ÊäÈëÎÄ¼ş
+#è¯»å–è¾“å…¥æ–‡ä»¶
 gene.group <- read.table(Genefile,header=T,sep="\t")
 gene.exp <- read.table(GeneExpfile,header=T,sep="\t",row.names=1)
 gene.cox <- read.table(Coxfile,header=T,sep="\t")
 
-#»ùÒòÈ¡½»¼¯
+#åŸºå› å–äº¤é›†
 colnames(gene.group) <- c('id','group')
 genelist <- intersect(gene.group$id, gene.cox$id)
 genelist <- intersect(genelist, rownames(gene.exp))
@@ -33,7 +28,7 @@ gene.group <- gene.group[order(gene.group$group),]
 gene.exp <- gene.exp[match(gene.group$id,rownames(gene.exp)),]
 gene.cox <- gene.cox[match(gene.group$id,gene.cox$id),]
 
-#×¼±¸ÍøÂçÎÄ¼ş
+#å‡†å¤‡ç½‘ç»œæ–‡ä»¶
 gene.cor <- corr.test(t(gene.exp))
 gene.cor.cor <- gene.cor$r
 gene.cor.pvalue <- gene.cor$p
@@ -47,7 +42,7 @@ gene.edge <- gene.melt[gene.melt$pvalue<0.0001,,drop=F]
 gene.edge$color <- ifelse(gene.edge$cor>0,'pink','#6495ED')
 gene.edge$weight <- abs(gene.edge$cor)*6
 
-#×¼±¸½á¹ûÊôĞÔÎÄ¼ş
+#å‡†å¤‡ç»“æœå±æ€§æ–‡ä»¶
 gene.node <- gene.group
 group.color <- colorRampPalette(brewer.pal(9, "Set1"))(length(unique(gene.node$group)))
 gene.node$color <- group.color[as.numeric(as.factor(gene.node$group))]
@@ -65,7 +60,7 @@ write.table(gene.node, nodefile, sep="\t", col.names=T, row.names=F, quote=F)
 write.table(gene.edge, edgefile, sep="\t", col.names=T, row.names=F, quote=F)
 
 
-#»æÖÆÍøÂçÍ¼
+#ç»˜åˆ¶ç½‘ç»œå›¾
 node = read.table(nodefile, header=T, sep="\t", comment.char="")
 edge = read.table(edgefile, header=T, sep="\t", comment.char="")
 
@@ -77,12 +72,12 @@ if(!is.na(match('size',colnames(node)))) V(g)$size = node$size
 if(!is.na(match('shape',colnames(node)))) V(g)$shape = node$shape
 if(!is.na(match('frame',colnames(node)))) V(g)$frame = node$frame
 
-#Êä³öÎÄ¼ş
+#è¾“å‡ºæ–‡ä»¶
 pdf(file="network.pdf", width=10, height=8)
 par(mar=c(0,0,0,0))
 layout(matrix(c(1,1,4,2,3,4),nc=2),height=c(4,4,2),width=c(8,3))
 
-#½Úµã×ø±ê 
+#èŠ‚ç‚¹åæ ‡ 
 coord = layout_in_circle(g)
 degree.x = acos(coord[,1])
 degree.y = asin(coord[,2])
@@ -96,12 +91,12 @@ degree.cut = cut(degree.alpha,degree.cut.group)
 degree.degree = c(-pi/4,-pi/4,-pi/2,-pi/2,pi/2,pi/2,pi/2,pi/4)
 degree = degree.degree[as.numeric(degree.cut)]
 
-#¶¨Òå±ıÍ¼,×ó°ëÔ²ÑÕÉ«´ú±ím6AµÄÀàĞÍ£¬ÓÒ°ëÔ²´ú±í»ùÒòÊÇ¸ß·çÏÕ»ùÒò,»¹ÊÇµÍ·çÏÕ»ùÒò
+#å®šä¹‰é¥¼å›¾,å·¦åŠåœ†é¢œè‰²ä»£è¡¨m6Açš„ç±»å‹ï¼Œå³åŠåœ†ä»£è¡¨åŸºå› æ˜¯é«˜é£é™©åŸºå› ,è¿˜æ˜¯ä½é£é™©åŸºå› 
 values <- lapply(node$id,function(x)c(1,1))
 V(g)$pie.color = lapply(1:nrow(node),function(x)c(node$color[x],node$frame[x]))
 V(g)$frame = NA 
 
-#»æÖÆÍ¼ĞÎ
+#ç»˜åˆ¶å›¾å½¢
 plot(g,layout=layout_in_circle,vertex.shape="pie",vertex.pie=values,
 	vertex.label.cex=V(g)$lable.cex,edge.width = E(g)$weight,edge.arrow.size=0,
 	vertex.label.color=V(g)$color,vertex.frame.color=V(g)$frame,edge.color=E(g)$color,
@@ -110,16 +105,16 @@ plot(g,layout=layout_in_circle,vertex.shape="pie",vertex.pie=values,
 # label.degree : zero means to the right; and pi means to the left; up is -pi/2 and down is pi/2;  The default value is -pi/4
 # label.dist If it is 0 then the label is centered on the vertex; If it is 1 then the label is displayed beside the vertex.
 
-#»æÖÆ½ÚµãÊôĞÔÍ¼Àı(m6AµÄÀàĞÍ)
+#ç»˜åˆ¶èŠ‚ç‚¹å±æ€§å›¾ä¾‹(m6Açš„ç±»å‹)
 par(mar=c(0,0,0,0))
 plot(1,type="n",xlab="",ylab="",axes=F)
 groupinfo = unique(data.frame(group=node$group,color=node$color))
 legend("left",legend=groupinfo$group,col=groupinfo$color,pch=16,bty="n",cex=3)
-#»æÖÆ·çÏÕÍ¼Àı(ÄÄĞ©»ùÒòÊÇ¸ß·çÏÕµÄ»ùÒò,ÄÄĞ©»ùÒòÊÇµÍ·çÏÕµÄ»ùÒò)
+#ç»˜åˆ¶é£é™©å›¾ä¾‹(å“ªäº›åŸºå› æ˜¯é«˜é£é™©çš„åŸºå› ,å“ªäº›åŸºå› æ˜¯ä½é£é™©çš„åŸºå› )
 par(mar=c(0,0,0,0))
 plot(1,type="n",xlab="",ylab="",axes=F)
 legend("left",legend=c('Risk factors','Favorable factors'),col=c('purple','green'),pch=16,bty="n",cex=2.5)
-#»æÖÆÔ¤ºópvalueÍ¼Àı
+#ç»˜åˆ¶é¢„åpvalueå›¾ä¾‹
 par(mar=c(0,0,0,0))
 plot(1,type="n",xlab="",axes=F,ylab="")
 legend("top",legend=c('Postive correlation with P<0.0001','Negative correlation with P<0.0001'),lty=1,lwd=4,col=c('pink','#6495ED'),bty="n",cex=2.2)
@@ -127,8 +122,3 @@ legend('bottom',legend=c(0.0001,0.001,0.01,0.05,1),pch=16,pt.cex=c(1.6,1.4,1.2,1
 dev.off()
 
 
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
