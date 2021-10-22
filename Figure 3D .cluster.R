@@ -1,24 +1,19 @@
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
 
 #if (!requireNamespace("BiocManager", quietly = TRUE))
 #    install.packages("BiocManager")
 #BiocManager::install("ConsensusClusterPlus")
 
 
-library(ConsensusClusterPlus)       #ÒıÓÃ°ü
-expFile="m6aGeneExp.txt"            #±í´ïÊäÈëÎÄ¼ş
-workDir="D:\\biowolf\\m6aTME\\23.m6aCluster"     #¹¤×÷Ä¿Â¼
-setwd(workDir)       #ÉèÖÃ¹¤×÷Ä¿Â¼
+library(ConsensusClusterPlus)       #å¼•ç”¨åŒ…
+expFile="m6aGeneExp.txt"            #è¡¨è¾¾è¾“å…¥æ–‡ä»¶
+workDir="D:\\biowolf\\m6aTME\\23.m6aCluster"     #å·¥ä½œç›®å½•
+setwd(workDir)       #è®¾ç½®å·¥ä½œç›®å½•
 
-#¶ÁÈ¡ÊäÈëÎÄ¼ş
+#è¯»å–è¾“å…¥æ–‡ä»¶
 data=read.table(expFile, header=T, sep="\t", check.names=F, row.names=1)
 data=as.matrix(data)
 
-#¾ÛÀà
+#èšç±»
 maxK=9
 results=ConsensusClusterPlus(data,
               maxK=maxK,
@@ -32,8 +27,8 @@ results=ConsensusClusterPlus(data,
               plot="png")
 
 
-#Êä³ö·ÖĞÍ½á¹û
-clusterNum=3        #·Ö¼¸Àà£¬¸ù¾İÅĞ¶Ï±ê×¼ÅĞ¶Ï
+#è¾“å‡ºåˆ†å‹ç»“æœ
+clusterNum=3        #åˆ†å‡ ç±»ï¼Œæ ¹æ®åˆ¤æ–­æ ‡å‡†åˆ¤æ–­
 cluster=results[[clusterNum]][["consensusClass"]]
 cluster=as.data.frame(cluster)
 colnames(cluster)=c("m6Acluster")
@@ -44,8 +39,4 @@ clusterOut=rbind(ID=colnames(cluster), cluster)
 write.table(clusterOut, file="m6aCluster.txt", sep="\t", quote=F, col.names=F)
 
 
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
+
