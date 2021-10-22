@@ -1,34 +1,29 @@
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
 
 #install.packages("corrplot")
 
 
-#ÒıÓÃ°ü
+#å¼•ç”¨åŒ…
 library(corrplot)
-scoreFile="m6Ascore.txt"         #m6A´ò·ÖÎÄ¼ş
-immFile="ssGSEA.result.txt"      #ssGSEA½á¹ûÎÄ¼ş
-setwd("D:\\biowolf\\m6aTME\\40.scoreImm")     #ÉèÖÃ¹¤×÷Ä¿Â¼
+scoreFile="m6Ascore.txt"         #m6Aæ‰“åˆ†æ–‡ä»¶
+immFile="ssGSEA.result.txt"      #ssGSEAç»“æœæ–‡ä»¶
+setwd("D:\\biowolf\\m6aTME\\40.scoreImm")     #è®¾ç½®å·¥ä½œç›®å½•
 
-#¶ÁÈ¡m6A´ò·ÖÎÄ¼ş
+#è¯»å–m6Aæ‰“åˆ†æ–‡ä»¶
 score=read.table(scoreFile, header=T, sep="\t", check.names=F, row.names=1)
 
-#¶ÁÈ¡ÃâÒßÏ¸°ûÎÄ¼ş
+#è¯»å–å…ç–«ç»†èƒæ–‡ä»¶
 immune=read.table(immFile, header=T, sep="\t", check.names=F, row.names=1)
 immune=t(immune)
 
-#Êı¾İºÏ²¢
+#æ•°æ®åˆå¹¶
 sameSample=intersect(row.names(score), row.names(immune))
 data=cbind(score[sameSample,,drop=F], immune[sameSample,,drop=F])
 
-#Ïà¹ØĞÔ¾ØÕó
+#ç›¸å…³æ€§çŸ©é˜µ
 M=cor(data)
 res1=cor.mtest(data, conf.level = 0.95)
 
-#»æÖÆÏà¹ØĞÔÍ¼ĞÎ
+#ç»˜åˆ¶ç›¸å…³æ€§å›¾å½¢
 pdf(file="cor.pdf", width=8, height=8)
 corrplot(M,
          order="original",
@@ -43,10 +38,3 @@ corrplot(M,
          col=colorRampPalette(c("blue", "white", "red"))(50),
          tl.col="black")
 dev.off()
-
-
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
