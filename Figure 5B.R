@@ -1,8 +1,3 @@
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
 
 #install.packages("colorspace")
 #install.packages("stringi")
@@ -16,59 +11,53 @@
 #BiocManager::install("enrichplot")
 
 
-#ÒıÓÃ°ü
+#å¼•ç”¨åŒ…
 library("clusterProfiler")
 library("org.Hs.eg.db")
 library("enrichplot")
 library("ggplot2")
 
-pvalueFilter=0.05       #pÖµ¹ıÂËÌõ¼ş
-qvalueFilter=0.05       #½ÃÕıºóµÄpÖµ¹ıÂËÌõ¼ş
+pvalueFilter=0.05       #på€¼è¿‡æ»¤æ¡ä»¶
+qvalueFilter=0.05       #çŸ«æ­£åçš„på€¼è¿‡æ»¤æ¡ä»¶
 
-#¶¨ÒåÑÕÉ«
+#å®šä¹‰é¢œè‰²
 colorSel="qvalue"
 if(qvalueFilter>0.05){
 	colorSel="pvalue"
 }
 
-setwd("D:\\biowolf\\m6aTME\\30.GO")        #ÉèÖÃ¹¤×÷Ä¿Â¼
-rt=read.table("interGene.txt", header=F, sep="\t", check.names=F)     #¶ÁÈ¡ÊäÈëÎÄ¼ş
+setwd("D:\\biowolf\\m6aTME\\30.GO")        #è®¾ç½®å·¥ä½œç›®å½•
+rt=read.table("interGene.txt", header=F, sep="\t", check.names=F)     #è¯»å–è¾“å…¥æ–‡ä»¶
 
-#»ùÒòÃû×Ö×ª»»Îª»ùÒòid
+#åŸºå› åå­—è½¬æ¢ä¸ºåŸºå› id
 genes=unique(as.vector(rt[,1]))
 entrezIDs=mget(genes, org.Hs.egSYMBOL2EG, ifnotfound=NA)
 entrezIDs=as.character(entrezIDs)
-gene=entrezIDs[entrezIDs!="NA"]        #È¥³ı»ùÒòidÎªNAµÄ»ùÒò
+gene=entrezIDs[entrezIDs!="NA"]        #å»é™¤åŸºå› idä¸ºNAçš„åŸºå› 
 #gene=gsub("c\\(\"(\\d+)\".*", "\\1", gene)
 
-#GO¸»¼¯·ÖÎö
+#GOå¯Œé›†åˆ†æ
 kk=enrichGO(gene=gene, OrgDb=org.Hs.eg.db, pvalueCutoff=1, qvalueCutoff=1, ont="all", readable=T)
 GO=as.data.frame(kk)
 GO=GO[(GO$pvalue<pvalueFilter & GO$qvalue<qvalueFilter),]
-#±£´æ¸»¼¯½á¹û
+#ä¿å­˜å¯Œé›†ç»“æœ
 write.table(GO, file="GO.txt", sep="\t", quote=F, row.names = F)
 
-#¶¨ÒåÏÔÊ¾TermÊıÄ¿
+#å®šä¹‰æ˜¾ç¤ºTermæ•°ç›®
 showNum=10
 if(nrow(GO)<30){
 	showNum=nrow(GO)
 }
 
-#Öù×´Í¼
+#æŸ±çŠ¶å›¾
 pdf(file="barplot.pdf", width=9, height=7)
 bar=barplot(kk, drop=TRUE, showCategory=showNum, split="ONTOLOGY", color=colorSel) + facet_grid(ONTOLOGY~., scale='free')
 print(bar)
 dev.off()
 		
-#ÆøÅİÍ¼
+#æ°”æ³¡å›¾
 pdf(file="bubble.pdf", width=9, height=7)
 bub=dotplot(kk, showCategory=showNum, orderBy="GeneRatio", split="ONTOLOGY", color=colorSel) + facet_grid(ONTOLOGY~., scale='free')
 print(bub)
 dev.off()
 
-
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
