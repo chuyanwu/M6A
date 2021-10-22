@@ -1,8 +1,3 @@
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
 
 #if (!requireNamespace("BiocManager", quietly = TRUE))
 #    install.packages("BiocManager")
@@ -11,37 +6,37 @@
 #install.packages("ggpubr")
 
 
-#ÒıÓÃ°ü
+#å¼•ç”¨åŒ…
 library(limma)
 library(ggpubr)
-m6aCluFile="m6aCluster.txt"        #m6A·ÖĞÍÎÄ¼ş
-geneCluFile="geneCluster.txt"      #»ùÒò·ÖĞÍÎÄ¼ş
-scoreFile="m6Ascore.txt"           #m6A´ò·ÖÎÄ¼ş
-setwd("D:\\biowolf\\m6aTME\\41.clusterScore")     #ÉèÖÃ¹¤×÷Ä¿Â¼
+m6aCluFile="m6aCluster.txt"        #m6Aåˆ†å‹æ–‡ä»¶
+geneCluFile="geneCluster.txt"      #åŸºå› åˆ†å‹æ–‡ä»¶
+scoreFile="m6Ascore.txt"           #m6Aæ‰“åˆ†æ–‡ä»¶
+setwd("D:\\biowolf\\m6aTME\\41.clusterScore")     #è®¾ç½®å·¥ä½œç›®å½•
 
-#¶ÁÈ¡ÊäÈëÎÄ¼ş
+#è¯»å–è¾“å…¥æ–‡ä»¶
 m6aClu=read.table(m6aCluFile, header=T, sep="\t", check.names=F, row.names=1)
 geneClu=read.table(geneCluFile, header=T, sep="\t", check.names=F, row.names=1)
 score=read.table(scoreFile, header=T, sep="\t", check.names=F, row.names=1)
 
-#ºÏ²¢Êı¾İ
+#åˆå¹¶æ•°æ®
 twoCluster=cbind(m6aClu, geneClu)
 sameSample=intersect(row.names(twoCluster), row.names(score))
 data=cbind(score[sameSample,,drop=F], twoCluster[sameSample,,drop=F])
 
-#######m6A·ÖĞÍÓë´ò·ÖÏà¹ØĞÔ########
-#ÉèÖÃ±È½Ï×é
+#######m6Aåˆ†å‹ä¸æ‰“åˆ†ç›¸å…³æ€§########
+#è®¾ç½®æ¯”è¾ƒç»„
 data$m6Acluster=factor(data$m6Acluster, levels=levels(factor(data$m6Acluster)))
 group=levels(factor(data$m6Acluster))
 comp=combn(group, 2)
 my_comparisons=list()
 for(i in 1:ncol(comp)){my_comparisons[[i]]<-comp[,i]}
 
-#¶¨ÒåÑÕÉ«
+#å®šä¹‰é¢œè‰²
 bioCol=c("#0066FF","#FF9900","#FF0000","#6E568C","#7CC767","#223D6C","#D20A13","#FFD121","#088247","#11AA4D")
 bioCol=bioCol[1:length(levels(factor(data$m6Acluster)))]
 	
-#»æÖÆboxplot
+#ç»˜åˆ¶boxplot
 boxplot=ggboxplot(data, x="m6Acluster", y="m6Ascore", color="m6Acluster",
 			      xlab="m6Acluster",
 			      ylab="m6Ascore",
@@ -50,26 +45,26 @@ boxplot=ggboxplot(data, x="m6Acluster", y="m6Ascore", color="m6Acluster",
 			      add = "jitter")+ 
 	stat_compare_means(comparisons = my_comparisons)
 	
-#Êä³öÍ¼Æ¬
+#è¾“å‡ºå›¾ç‰‡
 pdf(file="m6Acluster.pdf", width=5, height=4.5)
 print(boxplot)
 dev.off()
-#######m6A·ÖĞÍÓë´ò·ÖÏà¹ØĞÔ########
+#######m6Aåˆ†å‹ä¸æ‰“åˆ†ç›¸å…³æ€§########
 
 
-#######»ùÒò·ÖĞÍÓë´ò·ÖÏà¹ØĞÔ########
-#ÉèÖÃ±È½Ï×é
+#######åŸºå› åˆ†å‹ä¸æ‰“åˆ†ç›¸å…³æ€§########
+#è®¾ç½®æ¯”è¾ƒç»„
 data$geneCluster=factor(data$geneCluster, levels=levels(factor(data$geneCluster)))
 group=levels(factor(data$geneCluster))
 comp=combn(group, 2)
 my_comparisons=list()
 for(i in 1:ncol(comp)){my_comparisons[[i]]<-comp[,i]}
 
-#¶¨ÒåÑÕÉ«
+#å®šä¹‰é¢œè‰²
 bioCol=c("#0066FF","#FF9900","#FF0000","#6E568C","#7CC767","#223D6C","#D20A13","#FFD121","#088247","#11AA4D")
 bioCol=bioCol[1:length(levels(factor(data$geneCluster)))]
 	
-#»æÖÆboxplot
+#ç»˜åˆ¶boxplot
 boxplot=ggboxplot(data, x="geneCluster", y="m6Ascore", color="geneCluster",
 			      xlab="geneCluster",
 			      ylab="m6Ascore",
@@ -78,15 +73,8 @@ boxplot=ggboxplot(data, x="geneCluster", y="m6Ascore", color="geneCluster",
 			      add = "jitter")+ 
 	stat_compare_means(comparisons = my_comparisons)
 	
-#Êä³öÍ¼Æ¬
+#è¾“å‡ºå›¾ç‰‡
 pdf(file="geneCluster.pdf", width=5, height=4.5)
 print(boxplot)
 dev.off()
-#######»ùÒò·ÖĞÍÓë´ò·ÖÏà¹ØĞÔ########
-
-
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
+#######åŸºå› åˆ†å‹ä¸æ‰“åˆ†ç›¸å…³æ€§########
