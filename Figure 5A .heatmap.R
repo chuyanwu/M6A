@@ -1,24 +1,19 @@
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
 
 #install.packages("pheatmap")
 
 
-library(pheatmap)         #ÒıÓÃ°ü
-expFile="m6aGeneExp.txt"         #±í´ïÊäÈëÎÄ¼ş
-clusterFile="m6aCluster.txt"     #¾ÛÀà½á¹ûÎÄ¼ş
-cliFile="clinical.txt"           #ÁÙ´²Êı¾İÎÄ¼ş
-setwd("D:\\biowolf\\m6aTME\\25.heatmap")     #ÉèÖÃ¹¤×÷Ä¿Â¼
+library(pheatmap)         #å¼•ç”¨åŒ…
+expFile="m6aGeneExp.txt"         #è¡¨è¾¾è¾“å…¥æ–‡ä»¶
+clusterFile="m6aCluster.txt"     #èšç±»ç»“æœæ–‡ä»¶
+cliFile="clinical.txt"           #ä¸´åºŠæ•°æ®æ–‡ä»¶
+setwd("D:\\biowolf\\m6aTME\\25.heatmap")     #è®¾ç½®å·¥ä½œç›®å½•
 
-#¶ÁÈ¡ÊäÈëÎÄ¼ş
+#è¯»å–è¾“å…¥æ–‡ä»¶
 exp=read.table(expFile, header=T, sep="\t", check.names=F, row.names=1)
 exp=t(exp)
 cluster=read.table(clusterFile, header=T, sep="\t", check.names=F, row.names=1)
 
-#ºÏ²¢±í´ïºÍ·ÖĞÍÊı¾İ
+#åˆå¹¶è¡¨è¾¾å’Œåˆ†å‹æ•°æ®
 sameSample=intersect(row.names(exp), row.names(cluster))
 exp=exp[sameSample, , drop=F]
 cluster=cluster[sameSample, , drop=F]
@@ -27,26 +22,26 @@ Project=gsub("(.*?)\\_.*", "\\1", rownames(expCluster))
 rownames(expCluster)=gsub("(.*?)\\_(.*?)", "\\2", rownames(expCluster))
 expCluster=cbind(expCluster, Project)
 
-#ºÏ²¢ÁÙ´²Êı¾İ
+#åˆå¹¶ä¸´åºŠæ•°æ®
 cli=read.table(cliFile, header=T, sep="\t", check.names=F, row.names=1)
 sameSample=intersect(row.names(expCluster), row.names(cli))
 expCluster=expCluster[sameSample,,drop=F]
 cli=cli[sameSample,,drop=F]
 data=cbind(expCluster, cli)
 
-#ÌáÈ¡ÈÈÍ¼Êı¾İ
+#æå–çƒ­å›¾æ•°æ®
 data=data[order(data$m6Acluster),]
 Type=data[,((ncol(exp)+1):ncol(data))]
 data=t(data[,1:ncol(exp)])
 
-#¾ÛÀàÑÕÉ«
+#èšç±»é¢œè‰²
 bioCol=c("#0066FF","#FF9900","#FF0000","#6E568C","#7CC767","#223D6C","#D20A13","#FFD121","#088247","#11AA4D")
 ann_colors=list()
 m6aCluCol=bioCol[1:length(levels(factor(Type$m6Acluster)))]
 names(m6aCluCol)=levels(factor(Type$m6Acluster))
 ann_colors[["m6Acluster"]]=m6aCluCol
 
-#ÈÈÍ¼¿ÉÊÓ»¯
+#çƒ­å›¾å¯è§†åŒ–
 pdf("heatmap.pdf", height=5, width=8)
 pheatmap(data,
          annotation=Type,
@@ -60,10 +55,3 @@ pheatmap(data,
          fontsize_row=6,
          fontsize_col=6)
 dev.off()
-
-
-######Video source: https://ke.biowolf.cn
-######ÉúĞÅ×ÔÑ§Íø: https://www.biowolf.cn/
-######Î¢ĞÅ¹«ÖÚºÅ£ºbiowolf_cn
-######ºÏ×÷ÓÊÏä£ºbiowolf@foxmail.com
-######´ğÒÉÎ¢ĞÅ: 18520221056
